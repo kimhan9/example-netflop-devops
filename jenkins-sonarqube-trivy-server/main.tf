@@ -1,3 +1,5 @@
+data "aws_availability_zones" "azs" {}
+
 # VPC
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -5,7 +7,7 @@ module "vpc" {
 
   name = "my-vpc"
   cidr = var.vpc_cidr
-  azs  = var.azs
+  azs  = data.aws_availability_zones.azs.names
 
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
@@ -16,8 +18,8 @@ module "vpc" {
 
   tags = {
     "kubernetes.io/cluster/my-eks-cluster" = "shared"
-    "terraform"                            = "true"
-    "environment"                          = "dev"
+    "Terraform"                            = "true"
+    "Environment"                          = "dev"
   }
 
   public_subnet_tags = {
@@ -29,7 +31,6 @@ module "vpc" {
     "kubernetes.io/cluster/my-eks-cluster" = "shared"
     "kubernetes.io/role/internal-elb"      = 1
   }
-
 }
 
 # Security Group
@@ -74,7 +75,7 @@ module "sg" {
       from_port   = 9000
       to_port     = 9000
       protocol    = "tcp"
-      description = "SonarQube port"
+      description = "SonarQube"
       cidr_blocks = "0.0.0.0/0"
     }
   ]
@@ -94,9 +95,7 @@ module "ec2" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "5.6.1"
 
-  create_spot_instance = true
-
-  name = "jenkins-server"
+  name                   = "jenkins-server"
   instance_type          = var.instance_type
   ami                    = var.ami
   key_name               = var.key_pair
@@ -111,13 +110,17 @@ module "ec2" {
   ]
 
   tags = {
-    terraform   = "true"
-    environment = "dev"
-    name        = "jenkins-server"
+    Terraform   = "true"
+    Environment = "dev"
+    Name        = "jenkins-server"
   }
 }
 
 resource "aws_eip" "eip" {
   instance = module.ec2.id
   domain   = "vpc"
+
+  tags = {
+    "Name" = "eip-jenkins-server"
+  }
 }

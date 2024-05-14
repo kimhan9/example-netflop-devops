@@ -1,16 +1,11 @@
-variable "vpc_cidr" {
-  description = "VPC CIDR"
+variable "vpc_id" {
+  description = "VPC ID"
   type        = string
 }
 
-variable "private_subnets" {
-  description = "Private Subnets"
-  type        = list(string)
-}
-
-variable "public_subnets" {
-  description = "Public Subnets"
-  type        = list(string)
+variable "subnet_id" {
+  description = "Subnet ID"
+  type        = string
 }
 
 variable "instance_type" {

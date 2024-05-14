@@ -4,6 +4,6 @@ variable "vpc_id" {
 }
 
 variable "subnet_id" {
-  description = "Subnets CIDR"
+  description = "Subnets ID"
   type        = list(string)
 }

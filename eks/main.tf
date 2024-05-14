@@ -2,10 +2,11 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.10.0"
 
-  cluster_name    = "my-cluster"
+  cluster_name    = "my-eks-cluster"
   cluster_version = "1.29"
 
-  cluster_endpoint_public_access = true
+  cluster_endpoint_public_access           = true
+  enable_cluster_creator_admin_permissions = true
 
   vpc_id     = var.vpc_id
   subnet_ids = var.subnet_id
@@ -22,7 +23,7 @@ module "eks" {
   }
 
   tags = {
-    terraform   = "true"
-    environment = "dev"
+    Terraform   = "true"
+    Environment = "dev"
   }
 }
