@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Prometheus
 sudo useradd --system --no-create-home --shell /bin/false prometheus
