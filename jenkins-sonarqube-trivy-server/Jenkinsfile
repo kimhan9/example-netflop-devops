@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         jdk 'jdk17'
-        nodejs 'nodejs18'
+        nodejs 'node18'
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
@@ -52,23 +52,23 @@ pipeline {
         stage("Docker Build & Push"){
             steps{
                 script{
-                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
-                       sh "docker build --build-arg TMDB_V3_API_KEY=9b63deda2cf7d662c88d7b60dc677b3a -t netflix ."
-                       sh "docker tag netflix conandor/netflix:latest "
-                       sh "docker push conandor/netflix:latest "
+                   withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){   
+                       sh "docker build --build-arg TMDB_V3_API_KEY=9b63deda2cf7d662c88d7b60dc677b3a -t netflop ."
+                       sh "docker tag netflop conandor/netflop:latest "
+                       sh "docker push conandor/netflop:latest "
                     }
                 }
             }
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image conandor/netflix:latest > trivyimage.txt" 
+                sh "trivy image conandor/netflop:latest > trivyimage.txt" 
             }
         }
         stage('Deploy to container'){
             steps{
                 echo 'deploy'
-                sh 'docker run -d --name netflix -p 8081:80 conandor/netflix:latest'
+                sh 'docker run -d --name netflop -p 8081:80 conandor/netflop:latest'
             }
         }
     }

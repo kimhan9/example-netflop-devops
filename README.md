@@ -15,7 +15,7 @@ Setup a Netflix Clone deployment to Kubernetes
 ## Configure Java and Nodejs in Global Tool Configuration
 
 1. Go to Manage Jenkins -> Tools
-2. Install jdk17 (version 17) and nodejs18 (version 18). Click on Apply and then Save.
+2. Install **jdk17** (version 17) and **node18** (version 18). Click on **Apply** and then **Save**.
 
 ## Setup SonarQube
 
@@ -37,7 +37,7 @@ Setup a Netflix Clone deployment to Kubernetes
   - Docker Pipeline
   - Docker API
   - docker-build-step
-3. Add Dockerhub access in Credentials
+3. Add Dockerhub access in Credentials.
 
 ## Configure Dependency-check and Docker Tool
 1. Go to Dashboard -> Manage Jenkins -> Tools. Setup Dependency-Check Installation configuration. eg Name: DP-Check
