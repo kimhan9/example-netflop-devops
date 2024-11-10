@@ -5,7 +5,7 @@ provider "aws" {
 #terraform {
 #  backend "s3" {
 #    bucket = "terraform-state-0235"
-#    key    = "netflop-eks/terraform.tfstate"
+#    key    = "netflop-jenkins/terraform.tfstate"
 #    region = "ap-southeast-1"
 #  }
 #}

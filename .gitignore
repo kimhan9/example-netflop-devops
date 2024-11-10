@@ -1,3 +1,9 @@
-jenkins-sonarqube-trivy-server/.terraform*
-eks/*.terraform*
+jenkins-server/.terraform*
+jenkins-server/terraform.tfstate
+jenkins-server/terraform.tfstate.backup
 monitoring-server/*.terraform*
+monitoring-server/terraform.tfstate
+monitoring-server/terraform.tfstate.backup
+eks/.terraform*
+eks/terraform.tfstate
+eks/terraform.tfstate.backup

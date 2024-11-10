@@ -1,0 +1,94 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'jdk17'
+        nodejs 'node18'
+    }
+
+    environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+        REGISTRY = "conandor/netflop"
+        REGISTRY_CRED = "dockerhub"
+    }
+
+    stages {
+        stage('clean workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Checkout from Git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/kimhan9/netflop-project.git'
+            }
+        }
+
+        stage("Sonarqube Analysis") {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner \
+                    -Dsonar.projectName=netflop \
+                    -Dsonar.projectKey=netflop'''
+                }
+            }
+        }
+
+        stage("quality gate") {
+            steps {
+                waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh "npm install"
+            }
+        }
+
+        //
+        //stage('OWASP FS SCAN') {
+        //    steps {
+        //        dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'dp-check'
+        //        dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+        //    }
+        //}
+        //
+
+        stage("Build Image") {
+            steps {
+                script {
+                    dockerImage = docker.build("$REGISTRY:$BUILD_NUMBER", "--build-arg TMDB_V3_API_KEY=9b63deda2cf7d662c88d7b60dc677b3a .")
+                }
+            }
+        }
+
+        stage("Trivy Scan") {
+            steps {
+                script {
+                    sh "trivy image $REGISTRY:$BUILD_NUMBER > trivyimage.txt"
+                }
+            }
+        }
+
+        stage("Push Image") {
+            steps {
+                script {
+                    docker.withRegistry('', REGISTRY_CRED) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+
+        //
+        //stage('Deploy to container'){
+        //    steps{
+        //        echo 'deploy'
+        //        sh 'docker run -d --name netflop -p 8081:80 conandor/netflop:latest'
+        //    }
+        //}
+
+    }
+}
