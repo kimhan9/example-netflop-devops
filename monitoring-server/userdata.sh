@@ -29,6 +29,7 @@ scrape_configs:
 EOF
 
 sudo chown -R prometheus:prometheus /etc/prometheus/ /data/
+
 cat <<'EOF' > /etc/systemd/system/prometheus.service
 [Unit]
 Description=Prometheus
@@ -55,6 +56,7 @@ ExecStart=/usr/local/bin/prometheus \
 [Install]
 WantedBy=multi-user.target
 EOF
+
 sudo systemctl enable prometheus
 sudo systemctl start prometheus
 

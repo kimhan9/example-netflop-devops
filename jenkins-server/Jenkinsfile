@@ -47,14 +47,12 @@ pipeline {
             }
         }
 
-        //
         //stage('OWASP FS SCAN') {
         //    steps {
-        //        dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'dp-check'
+        //        dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
         //        dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
         //    }
         //}
-        //
 
         stage("Build Image") {
             steps {
@@ -82,13 +80,28 @@ pipeline {
             }
         }
 
-        //
-        //stage('Deploy to container'){
-        //    steps{
-        //        echo 'deploy'
-        //        sh 'docker run -d --name netflop -p 8081:80 conandor/netflop:latest'
-        //    }
-        //}
+        /*
+        stage("Docker Build & Push"){
+            steps{
+                script{
+                    withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){   
+                        sh "docker build --build-arg TMDB_V3_API_KEY=9b63deda2cf7d662c88d7b60dc677b3a -t netflop ."
+                        sh "docker tag netflop conandor/netflop:latest "
+                        sh "docker push conandor/netflop:latest "
+                    }
+                }
+            }
+        }
+        */
+
+        /*
+        stage('Deploy to container'){
+            steps{
+                echo 'deploy'
+                sh 'docker run -d --name netflop -p 8081:80 conandor/netflop:latest'
+            }
+        }
+        */
 
     }
 }

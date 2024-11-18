@@ -104,7 +104,8 @@ module "ec2" {
   subnet_id              = module.vpc.public_subnets[0]
   user_data              = file("userdata.sh")
   root_block_device = [
-    { volume_size = 25
+    {
+      volume_size = 25
       volume_type = "gp3"
     }
   ]

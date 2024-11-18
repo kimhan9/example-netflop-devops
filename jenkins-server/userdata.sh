@@ -6,21 +6,6 @@ sudo apt install unzip -y
 unzip awscliv2.zip
 sudo ./aws/install
 
-# Install Docker
-sudo apt update
-sudo apt install docker.io -y
-sudo usermod -a -G docker jenkins
-sudo usermod -a -G docker ubuntu
-sudo systemctl restart docker
-sudo chmod 777 /var/run/docker.sock
-
-# Install Kubectl
-sudo apt install curl -y
-sudo curl -LO "https://dl.k8s.io/release/v1.28.4/bin/linux/amd64/kubectl"
-sudo chmod +x kubectl
-sudo mv kubectl /usr/local/bin/
-kubectl version --client
-
 # Install Java 17
 # REF: https://www.rosehosting.com/blog/how-to-install-java-17-lts-on-ubuntu-20-04/
 sudo apt install openjdk-17-jdk openjdk-17-jre -y
@@ -37,6 +22,20 @@ sudo apt install fontconfig openjdk-17-jre -y
 sudo apt install jenkins -y
 sudo systemctl start jenkins
 sudo systemctl enable jenkins
+
+# Install Docker
+sudo apt update
+sudo apt install docker.io -y
+sudo usermod -aG docker jenkins
+sudo usermod -aG docker ubuntu
+sudo chmod 777 /var/run/docker.sock
+sudo systemctl restart docker
+
+# Install Kubectl
+sudo apt install curl -y
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
 
 # Install Terraform
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
